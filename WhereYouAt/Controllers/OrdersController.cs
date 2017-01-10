@@ -15,9 +15,17 @@ namespace WhereYouAt.Controllers
         private OrderDBContext db = new OrderDBContext();
 
         // GET: Orders
-        public ActionResult Index()
+        public ActionResult Index(string searchString)
         {
-            return View(db.Orders.ToList());
+            var orders = from o in db.Orders
+                         select o;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orders = orders.Where(s => s.LastName.Contains(searchString));
+            }
+
+            return View(orders);
         }
 
         // GET: Orders/Details/5
